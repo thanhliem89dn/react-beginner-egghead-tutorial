@@ -5,37 +5,45 @@ class App extends React.Component {
   constructor(){
     super();
     this.state = {
-      txt: 'this is the state txt',
-      cat: 0
+      red: 0,
+      green: 0,
+      blue: 0
     }
     this.update = this.update.bind(this);
   }
   update(e){
     this.setState({
-      txt: e.target.value
+      red: ReactDom.findDOMNode(this.refs.red.refs.inp).value,
+      green: ReactDom.findDOMNode(this.refs.green.refs.inp).value,
+      blue: ReactDom.findDOMNode(this.refs.blue.refs.inp).value
     })
   }
   render() {
     return (
       <div>
-        <Widget txt={this.state.txt} update={this.update} />
-        <Widget txt={this.state.txt} update={this.update} />
-        <Widget txt={this.state.txt} update={this.update} />
-        <Widget txt={this.state.txt} update={this.update} />
-
+        <Slider ref="red" RGBPart={this.state.red} update={this.update} />
+        <br/>
+        <Slider ref="green" RGBPart={this.state.green} update={this.update} />
+        <br/>
+        <Slider ref="blue" RGBPart={this.state.blue} update={this.update} />
       </div>
     );
   }
 }
 
-const Widget = (props) => {
-  return (
-    <div>
-      <input type="text"
-        onChange={props.update} />
-      <h1>Hello {props.txt}</h1>
-    </div>
-  );
+class Slider extends React.Component {
+  render() {
+    return (
+      <div>
+        {this.props.RGBPart}
+        <br/>
+        <input ref="inp" type="range"
+          min="0"
+          max="255"
+          onChange={this.props.update} />
+      </div>
+    );
+  }
 }
 
 ReactDom.render(
