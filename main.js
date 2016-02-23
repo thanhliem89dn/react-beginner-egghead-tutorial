@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import App from './App';
+import Wrapper from './App';
 
 ReactDom.render(
-  <App />, document.getElementById('app')
+  <Wrapper />, document.getElementById('app')
 );
