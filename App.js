@@ -4,18 +4,31 @@ import ReactDom from 'react-dom';
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { val:0 };
     this.update = this.update.bind(this);
+    this.state = {increasing: false};
   }
   update() {
-    this.setState({val: this.state.val + 1})
+    ReactDom.render(
+      <App val={this.props.val + 1} />,
+      document.getElementById('app')
+    )
   }
   componentWillMount() {
     console.log('mounting')
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({increasing: nextProps.val > this.props.val })
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.val % 5 === 0
+  }
   render() {
-    console.log('rendering')
-    return <Button update={this.update}> I <Heart/> you {this.state.val} </Button>
+    console.log(this.state.increasing)
+    return (
+      <button onClick={this.update}>
+       {this.props.val}
+      </button>
+    )
   }
   componentDidMount() {
     console.log('mounted')
@@ -23,32 +36,11 @@ class App extends React.Component {
   componentWillUnmount() {
     console.log('will unmount')
   }
-}
-
-class Button extends React.Component {
-  render() {
-    return <button onClick={this.props.update}> {this.props.children}  </button>
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps)
   }
 }
 
-class Wrapper extends React.Component {
-  mount() {
-    ReactDom.render(<App />, document.getElementById('a'));
-  }
-  unmount() {
-    ReactDom.unmountComponentAtNode(document.getElementById('a'));
-  }
-  render () {
-    return (
-      <div>
-        <button onClick={this.mount.bind(this)}>Mount</button>
-        <button onClick={this.unmount.bind(this)}>Unmount</button>
-        <div id='a'></div>
-      </div>
-    )
-  }
-}
+App.defaultProps = { val: 0 }
 
-const Heart = () => <span className="glyphicon glyphicon-heart"> </span>
-
-export default Wrapper
+export default App
