@@ -1,43 +1,42 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-class App extends React.Component {
+let Mixin = InnerComponent => class extends React.Component {
   constructor() {
     super();
     this.update = this.update.bind(this);
-    this.state = {increasing: false};
+    this.state = {val: 0};
   }
   update() {
-    ReactDom.render(
-      <App val={this.props.val + 1} />,
-      document.getElementById('app')
-    )
+    this.setState({val: this.state.val + 1})
   }
-  componentWillMount() {
-    console.log('mounting')
+  render(){
+    return <InnerComponent
+      update={this.update}
+      {...this.state}
+      {...this.props} />
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({increasing: nextProps.val > this.props.val })
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.val % 5 === 0
-  }
+}
+
+const Button = (props) => <button onClick={props.update}>
+                          {props.txt} - {props.val}
+                          </button>
+
+const Label = (props) => <label onMouseMove={props.update}>
+                          {props.txt} - {props.val}
+                          </label>
+
+let ButtonMixed = Mixin(Button)
+let LabelMixed = Mixin(Label)
+
+class App extends React.Component {
   render() {
-    console.log(this.state.increasing)
     return (
-      <button onClick={this.update}>
-       {this.props.val}
-      </button>
+      <div>
+        <ButtonMixed txt="Button text" />
+        <LabelMixed txt="Label text" />
+      </div>
     )
-  }
-  componentDidMount() {
-    console.log('mounted')
-  }
-  componentWillUnmount() {
-    console.log('will unmount')
-  }
-  componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps)
   }
 }
 
