@@ -4,67 +4,38 @@ import ReactDom from 'react-dom';
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {red:0}
+    this.state = {data: [
+      {id: 1, name: "Simon Bailey1"},
+      {id: 2, name: "Simon Bailey2"},
+      {id: 3, name: "Simon Bailey3"},
+      {id: 4, name: "Simon Bailey4"},
+      {id: 5, name: "Simon Bailey5"},
+      {id: 6, name: "Simon Bailey6"},
+      {id: 7, name: "Simon Bailey7"},
+      {id: 8, name: "Simon Bailey8"},
+      {id: 9, name: "Simon Bailey9"},
+      {id: 10, name: "Simon Bailey10"},
+    ]}
     this.update = this.update.bind(this)
   }
   update(e) {
-    this.setState({
-      red: ReactDom.findDOMNode(this.refs.red.refs.inp).value
+  }
+  render() {
+    let rows = this.state.data.map ( person => {
+      return <PersonRow key={person.id} data={person} />
     });
-  }
-  render() {
     return (
-      <div>
-      <NumInput
-        ref="red"
-        min={0}
-        max={255}
-        step={10}
-        val={this.state.red}
-        label="Red"
-        update={this.update}
-      />
-      < /div>
+      <table>
+      <tbody>{rows}</tbody>
+      </table>
     );
   }
 }
 
-class NumInput extends React.Component {
-  render() {
-    let label = this.props.label != '' ?
-    <label>{this.props.label} - {this.props.val}</label> : '';
-    return (
-      <div>
-      <input ref='inp'
-        type={this.props.type}
-        min={this.props.min}
-        max={this.props.max}
-        step={this.props.step}
-        defaultValue={this.props.val}
-        onChange={this.props.update} />
-        {label}
-      </div>
-    );
-  }
+const PersonRow = (props) => {
+  return <tr>
+    <td>{props.data.id}</td>
+    <td>{props.data.name}</td>
+  </tr>
 }
-
-NumInput.propTypes = {
-  min: React.PropTypes.number,
-  max: React.PropTypes.number,
-  step: React.PropTypes.number,
-  val: React.PropTypes.number,
-  label: React.PropTypes.string,
-  update: React.PropTypes.func.isRequired,
-  type: React.PropTypes.oneOf(['number', 'range'])
-}
-
-NumInput.defaultProps = {
-  min: 0,
-  max: 0,
-  step: 1,
-  val: 0,
-  label: '',
-  type: 'range'
-}
-
 export default App
